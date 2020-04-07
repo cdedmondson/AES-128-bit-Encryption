@@ -95,7 +95,7 @@ void byteSubstitution(unsigned char *a) {
 
 /*
  * Function: mixColumns
- * Purpose:  Provides diffusion by mixing the input around. Unlike MixColumns
+ * Purpose:  Provides diffusion by mixing the input around. Unlike shifRows, mixColumns
  *           performs operations splitting the matrix by columns.
  */
 void mixColumns(unsigned char *input) {
@@ -234,7 +234,8 @@ void AES128Encrypt(unsigned char *plain_text, unsigned char *key, unsigned char 
         file_buffer[j] = plain_text[j];
     }
 
-    roundKeyAddition(key, file_buffer); // Initial Round
+    // Initial Round
+    roundKeyAddition(key, file_buffer);
 
     // Main Rounds
     for (int round = 0; round < rounds; round++) {
@@ -286,9 +287,8 @@ string stringToLowerCase(string &str) {
 }
 
 /*
- * Function: processFile
- * Purpose: Create encrypted file with .enc extension and
- *          return size in bytes of file to be encrypted
+ * Function:    getFileSize
+ * Purpose: Get file size in bytes, then return size
  */
 int getFileSize(const string &source_file_path) {
     ifstream source_file;
@@ -315,6 +315,11 @@ void stringToHEX(string &str) {
     }
 }
 
+/*
+ * Function: divisibleBy16
+ * Purpose: Take modulus of file size, if file size is
+ *          evenly divisible by 16 return true else false
+ */
 bool divisibleBy16(int file_size) {
     if (file_size % 16 == 0)    // If file size is not evenly divisible by 16
         return true; // (16 - (file_size % 16));   // Padding will be the remainder
@@ -339,7 +344,7 @@ bool fileExists(const string &source_file_path) {
 }
 
 /*
- * Function: getUserInput
+ * Function: getKeyFromUser
  * Purpose: Receive and sanitize user input
  */
 void getKeyFromUser() {
@@ -364,6 +369,11 @@ void getKeyFromUser() {
     stringToHEX(temp_input);
 };
 
+/*
+ * Function: appendExtension
+ * Purpose: Remove extension from source file and append .enc
+ *          extension for encrypted file output
+ */
 string appendExtension(string &source_file_path) {
     string destination_file_path;
     // Remove extension from source file example .txt,.jpg,.pdf etc...
